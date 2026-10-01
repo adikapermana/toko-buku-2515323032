@@ -7,21 +7,25 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
     // Daftar buku
-    private $books = [
+    private array $books = [
         [
             'id' => 0,
-            'judul' => 'Laskar Pelangi',
-            'penulis' => 'Andrea Hirata'
+            'judul' => 'Principles Of Economics',
+            'penulis' => 'N. Gregory Mankiw',
+            'harga' => 300000
+
         ],
         [
             'id' => 1,
-            'judul' => 'Bumi',
-            'penulis' => 'Tere Liye'
+            'judul' => 'The Psychology of Money',
+            'penulis' => 'Morgan Housel',
+            'harga' => 150000
         ],
         [
             'id' => 2,
-            'judul' => 'Negeri 5 Menara',
-            'penulis' => 'Ahmad Fuadi'
+            'judul' => 'The Intelligent Investor',
+            'penulis' => 'Benjamin Graham',
+            'harga' => 215000
         ]
     ];
 
