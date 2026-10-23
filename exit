@@ -1,0 +1,186 @@
+warning: in the working copy of 'resources/views/buku/index.blade.php', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'resources/views/buku/show.blade.php', CRLF will be replaced by LF the next time Git touches it
+[1mdiff --git a/app/Http/Controllers/BookController.php b/app/Http/Controllers/BookController.php[m
+[1mindex af92be8..e806268 100644[m
+[1m--- a/app/Http/Controllers/BookController.php[m
+[1m+++ b/app/Http/Controllers/BookController.php[m
+[36m@@ -2,51 +2,27 @@[m
+ [m
+ namespace App\Http\Controllers;[m
+ [m
+[32m+[m
+ use Illuminate\Http\Request;[m
+[32m+[m[32muse App\Models\Book;[m
+ [m
+ class BookController extends Controller[m
+ {[m
+[31m-    // Daftar buku[m
+[31m-    private array $books = [[m
+[31m-        [[m
+[31m-            'id' => 0,[m
+[31m-            'judul' => 'Principles Of Economics',[m
+[31m-            'penulis' => 'N. Gregory Mankiw',[m
+[31m-            'harga' => 300000[m
+[31m-[m
+[31m-        ],[m
+[31m-        [[m
+[31m-            'id' => 1,[m
+[31m-            'judul' => 'The Psychology of Money',[m
+[31m-            'penulis' => 'Morgan Housel',[m
+[31m-            'harga' => 150000[m
+[31m-        ],[m
+[31m-        [[m
+[31m-            'id' => 2,[m
+[31m-            'judul' => 'The Intelligent Investor',[m
+[31m-            'penulis' => 'Benjamin Graham',[m
+[31m-            'harga' => 215000[m
+[31m-        ][m
+[31m-    ];[m
+[31m-[m
+[31m-    // Menampilkan seluruh daftar buku[m
+     public function index()[m
+     {[m
+         return view('buku.index', [[m
+[31m-            'books' => $this->books[m
+[32m+[m[32m            'daftarBuku' => Book::with('category')->get(),[m
+         ]);[m
+[31m-        }[m
+[32m+[m[32m    }[m
+ [m
+[31m-    // Menampilkan satu buku berdasarkan ID[m
+     public function show($id)[m
+     {[m
+[31m-        $book = collect($this->books)->firstWhere('id', $id);[m
+[32m+[m[32m        $buku = Book::with('category')->find($id);[m
+ [m
+         return view('buku.show', [[m
+[31m-            'book' => $book,[m
+[31m-            'id' => $id[m
+[32m+[m[32m            'buku' => $buku,[m
+[32m+[m[32m            'id' => $id,[m
+         ]);[m
+     }[m
+[31m-    [m
+ }[m
+ [m
+[1mdiff --git a/database/seeders/DatabaseSeeder.php b/database/seeders/DatabaseSeeder.php[m
+[1mindex 6b901f8..c2b5f34 100644[m
+[1m--- a/database/seeders/DatabaseSeeder.php[m
+[1m+++ b/database/seeders/DatabaseSeeder.php[m
+[36m@@ -21,5 +21,12 @@[m [mpublic function run(): void[m
+             'name' => 'Test User',[m
+             'email' => 'test@example.com',[m
+         ]);[m
+[32m+[m
+[32m+[m[32m        $this->call([[m
+[32m+[m[32m            CategorySeeder::class,[m
+[32m+[m[32m            BookSeeder::class,[m
+[32m+[m[41m            [m
+[32m+[m[32m        ]);[m
+[32m+[m
+     }[m
+ }[m
+[1mdiff --git a/public/custom.css b/public/custom.css[m
+[1mdeleted file mode 100644[m
+[1mindex 2a571a0..0000000[m
+[1m--- a/public/custom.css[m
+[1m+++ /dev/null[m
+[36m@@ -1,10 +0,0 @@[m
+[31m-/* public/css/custom.css */[m
+[31m-.harga-buku {[m
+[31m-    color: #0d6efd;[m
+[31m-    font-weight: 600;[m
+[31m-}[m
+[31m-[m
+[31m-.kartu-buku img {[m
+[31m-    height: 220px;[m
+[31m-    object-fit: cover;[m
+[31m-}[m
+[1mdiff --git a/resources/views/buku/index.blade.php b/resources/views/buku/index.blade.php[m
+[1mindex 9d8e71e..f415142 100644[m
+[1m--- a/resources/views/buku/index.blade.php[m
+[1m+++ b/resources/views/buku/index.blade.php[m
+[36m@@ -4,21 +4,24 @@[m
+ @section('title', 'Daftar Buku — BookStore')[m
+ [m
+ @section('content')[m
+[31m-    <h1 class="mb-4">Daftar Buku</h1>[m
+[32m+[m[32m<h1 class="mb-4">Daftar Buku</h1>[m
+ [m
+[31m-    <div class="row row-cols-1 row-cols-md-3 g-4">[m
+[31m-        @foreach ($books as $id => $buku)[m
+[31m-            <div class="col">[m
+[31m-                <div class="card h-100 kartu-buku">[m
+[31m-                    <img src="{{ asset('images/sampul-placeholder.png') }}" class="card-img-top" alt="Sampul {{ $buku['judul'] }}">[m
+[31m-                    <div class="card-body d-flex flex-column">[m
+[31m-                        <h5 class="card-title">{{ $buku['judul'] }}</h5>[m
+[31m-                        <p class="card-text text-muted mb-1">{{ $buku['penulis'] }}</p>[m
+[31m-                        <p class="card-text harga-buku">Rp{{ number_format($buku['harga'], 0, ',', '.') }}</p>[m
+[31m-                        <a href="{{ url('/buku/'.$id) }}" class="btn btn-primary mt-auto">Lihat Detail</a>[m
+[31m-                    </div>[m
+[31m-                </div>[m
+[32m+[m[32m<div class="row row-cols-1 row-cols-md-3 g-4">[m
+[32m+[m[32m    @foreach ($daftarBuku as $buku)[m
+[32m+[m[32m    <div class="col">[m
+[32m+[m[32m        <div class="card h-100 kartu-buku">[m
+[32m+[m[32m            <img src="{{ asset('images/sampul-placeholder.png') }}" class="card-img-top" alt="Sampul {{ $buku->title }}">[m
+[32m+[m[32m            <div class="card-body d-flex flex-column">[m
+[32m+[m[32m                <span class="badge bg-secondary align-self-start mb-2">{{ $buku->category->name }}</span>[m
+[32m+[m[32m                <h5 class="card-title">{{ $buku->title }}</h5>[m
+[32m+[m[32m                <p class="card-text text-muted mb-1">{{ $buku->author_name }}</p>[m
+[32m+[m[32m                <p class="card-text harga-buku">Rp{{ number_format($buku->price, 0, ',', '.') }}</p>[m
+[32m+[m[32m                <a href="{{ url('/buku/'.$buku->id) }}" class="btn btn-primary mt-auto">Lihat Detail</a>[m
+             </div>[m
+[31m-        @endforeach[m
+[32m+[m[32m        </div>[m
+     </div>[m
+[31m-@endsection[m
+\ No newline at end of file[m
+[32m+[m[32m    @endforeach[m
+[32m+[m[32m</div>[m
+[32m+[m[32m@endsection[m
+[41m+[m
+[41m+   [m
+\ No newline at end of file[m
+[1mdiff --git a/resources/views/buku/show.blade.php b/resources/views/buku/show.blade.php[m
+[1mindex bde90f0..1b5a28a 100644[m
+[1m--- a/resources/views/buku/show.blade.php[m
+[1m+++ b/resources/views/buku/show.blade.php[m
+[36m@@ -1,26 +1,25 @@[m
+[31m-{{-- resources/views/buku/show.blade.php (contoh lengkap) --}}[m
+[32m+[m
+ @extends('layouts.app')[m
+ [m
+[31m-@section('title', ($buku['judul'] ?? 'Buku tidak ditemukan') . ' — BookStore')[m
+[32m+[m
+[32m+[m[32m@section('title', ($buku->title ?? 'Buku tidak ditemukan') . ' — BookStore')[m
+ [m
+ @section('content')[m
+[31m-    @if ($book)[m
+[32m+[m[32m    @if ($buku)[m
+         <div class="row">[m
+             <div class="col-md-4">[m
+[31m-                <img src="{{ asset('images/sampul-placeholder.png') }}" class="img-fluid rounded" alt="Sampul {{ $book['judul'] }}">[m
+[32m+[m[32m                <img src="{{ asset('images/sampul-placeholder.png') }}" class="img-fluid rounded" alt="Sampul {{ $buku->title }}">[m
+             </div>[m
+             <div class="col-md-8">[m
+[31m-                <h1>{{ $book['judul'] }}</h1>[m
+[31m-                <p class="text-muted">Penulis: {{ $book['penulis'] }}</p>[m
+[31m-                <p class="harga-buku fs-4">Rp{{ number_format($book['harga'], 0, ',', '.') }}</p>[m
+[32m+[m[32m                <span class="badge bg-secondary mb-2">{{ $buku->category->name }}</span>[m
+[32m+[m[32m                <h1>{{ $buku->title }}</h1>[m
+[32m+[m[32m                <p class="text-muted">Penulis: {{ $buku->author_name }}</p>[m
+[32m+[m[32m                <p class="harga-buku fs-4">Rp{{ number_format($buku->price, 0, ',', '.') }}</p>[m
+                 <a href="{{ url('/buku') }}" class="btn btn-outline-secondary">&larr; Kembali ke daftar buku</a>[m
+             </div>[m
+         </div>[m
+     @else[m
+[31m-        <div class="alert alert-warning">[m
+[31m-            <h1 class="h4">Buku tidak ditemukan</h1>[m
+[31m-            <p class="mb-0">Tidak ada buku dengan id {{ $id }}.</p>[m
+[31m-        </div>[m
+[31m-        <a href="{{ url('/buku') }}" class="btn btn-outline-secondary mt-3">&larr; Kembali ke daftar buku</a>[m
+[32m+[m[32m        ...{{-- bagian "buku tidak ditemukan", TIDAK berubah dari pertemuan sebelumnya --}}[m
+     @endif[m
+ @endsection[m
+[41m+[m
