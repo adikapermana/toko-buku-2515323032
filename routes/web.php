@@ -13,3 +13,6 @@ Route::resource('buku', BookController::class);
 
 Route::resource('kategori', CategoryController::class)->except('show');
 Route::resource('penerbit', PublisherController::class)->except('show');
+
+
+//0
