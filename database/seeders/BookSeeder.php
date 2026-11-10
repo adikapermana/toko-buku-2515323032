@@ -19,6 +19,7 @@ class BookSeeder extends Seeder
         $keuangan = Category::where('name', 'Keuangan')->first();
 
         Book::create([
+            //
             'category_id' => $pemrograman->id,
             'title' => 'Dasar Pemrograman Dalam Bahasa C',
             'author_name' => 'Bernadus Angga Seno Aji',
