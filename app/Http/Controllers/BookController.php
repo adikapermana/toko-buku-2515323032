@@ -178,6 +178,7 @@ class BookController extends Controller
             'stock.max' => 'Stok terlalu besar (maksimal 100.000).',
             //
             //
+            //
             'cover.image' => 'Sampul harus berupa gambar.',
             'cover.mimes' => 'Sampul harus berformat JPG atau PNG.',
             'cover.max' => 'Ukuran sampul maksimal 2 MB.',
