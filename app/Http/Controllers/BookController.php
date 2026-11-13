@@ -176,7 +176,7 @@ class BookController extends Controller
             'stock.integer' => 'Stok harus berupa bilangan bulat.',
             'stock.min' => 'Stok tidak boleh negatif.',
             'stock.max' => 'Stok terlalu besar (maksimal 100.000).',
-
+            //
 
             'cover.image' => 'Sampul harus berupa gambar.',
             'cover.mimes' => 'Sampul harus berformat JPG atau PNG.',
