@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Models\Penulis;
 
 
 class BookController extends Controller
@@ -18,7 +19,7 @@ class BookController extends Controller
         $kategoriId = $request->query('kategori');
         $penerbitId = $request->query('penerbit');
 
-        $daftarBuku = Book::with(['category', 'publisher'])
+        $daftarBuku = Book::with(['category', 'publisher', 'penulis'])
             ->when($kataKunci, function ($query, $kataKunci) {
                 $query->where(function ($query) use ($kataKunci) {
                     $query->where('title', 'like', '%' . $kataKunci . '%')
@@ -47,7 +48,7 @@ class BookController extends Controller
 
     public function show($id)
     {
-        $buku = Book::with(['category', 'publisher'])->find($id);
+        $buku = Book::with(['category', 'publisher', 'penulis'])->find($id);
 
         $bukuSerupa = $buku
             ? $buku->category->books()->whereKeyNot($buku->id)->latest('id')->limit(3)->get()
@@ -65,6 +66,7 @@ class BookController extends Controller
         return view('buku.create', [
             'daftarKategori' => Category::orderBy('name')->get(),
             'daftarPenerbit' => Publisher::orderBy('name')->get(),
+            'daftarPenulis' => Penulis::orderBy('nama')->get(),
         ]);
     }
 
@@ -74,6 +76,7 @@ class BookController extends Controller
             'buku' => Book::findOrFail($id),
             'daftarKategori' => Category::orderBy('name')->get(),
             'daftarPenerbit' => Publisher::orderBy('name')->get(),
+            'daftarPenulis' => Penulis::orderBy('nama')->get(),
         ]);
     }
 
@@ -140,10 +143,12 @@ class BookController extends Controller
             'author_name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'publisher_id' => 'required|exists:publishers,id',
+            'penulis_id' => 'nullable|exists:penulis,id',
             'price' => 'required|integer|min:0|max:99999999',
             'published_year' => 'nullable|integer|min:1900|max:2100',
             'stock' => 'required|integer|min:0|max:100000',
             'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            
         ];
     }
     private function pesan(): array
@@ -157,6 +162,7 @@ class BookController extends Controller
             'category_id.exists' => 'Kategori yang dipilih tidak ditemukan.',
             'publisher_id.required' => 'Pilih salah satu penerbit.',
             'publisher_id.exists' => 'Penerbit yang dipilih tidak ditemukan.',
+            'penulis_id.exists' => 'Penulis yang dipilih tidak ditemukan.',
             'price.required' => 'Harga wajib diisi.',
             'price.integer' => 'Harga harus berupa bilangan bulat tanpa titik atau koma (contoh: 85000).',
             

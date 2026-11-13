@@ -17,7 +17,13 @@ class Book extends Model
         'published_year',
         'stock',
         'cover',
+        'penulis_id'
     ];
+
+    public function penulis()
+    {
+        return $this->belongsTo(Penulis::class, 'penulis_id');
+    }
 
     public function category(): BelongsTo
     {

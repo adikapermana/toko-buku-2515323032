@@ -57,5 +57,13 @@
         </div>
         <a href="{{ url('/buku') }}" class="btn btn-outline-secondary mt-3">&larr; Kembali ke daftar buku</a>
     @endif
+
+    <p>Penulis terdaftar:
+        @if ($buku->penulis)
+            {{ $buku->penulis->nama }}
+        @else
+            -
+        @endif
+    </p>
 @endsection
 

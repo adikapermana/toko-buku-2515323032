@@ -62,6 +62,23 @@
         </div>
 
         <div class="mb-3">
+            <label for="penulis_id" class="form-label">Penulis Terdaftar (opsional)</label>
+            <select id="penulis_id" name="penulis_id"
+                    class="form-select @error('penulis_id') is-invalid @enderror">
+                <option value="">-- Tanpa penulis terdaftar --</option>
+                @foreach ($daftarPenulis as $p)
+                    <option value="{{ $p->id }}"
+                        {{ old('penulis_id', $buku->penulis_id) == $p->id ? 'selected' : '' }}>
+                        {{ $p->nama }}
+                    </option>
+                @endforeach
+            </select>
+            @error('penulis_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
             <label for="price" class="form-label">Harga (Rp)</label>
             <input type="text" id="price" name="price"
                    class="form-control @error('price') is-invalid @enderror"
